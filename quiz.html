@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0f172a" />
+  <title>Road Rules & Signs — 20 Question Practice</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root { color-scheme: light; }
+    body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    .sign { width: 112px; height: 112px; flex: 0 0 auto; }
+    .option:focus-within { outline: 3px solid #93c5fd; outline-offset: 2px; }
+    .correct-answer { border-color: #16a34a !important; background: #f0fdf4 !important; }
+    .wrong-answer { border-color: #dc2626 !important; background: #fef2f2 !important; }
+    .progress-fill { transition: width .25s ease; }
+    @media (max-width: 420px) { .sign { width: 88px; height: 88px; } }
+    @media print { .no-print { display:none !important; } body { background:white !important; } }
+  </style>
+</head>
+<body class="min-h-screen bg-slate-100 text-slate-900">
+  <header class="bg-slate-950 text-white">
+    <div class="mx-auto max-w-5xl px-4 py-6 sm:px-6">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <p class="text-sm font-semibold uppercase tracking-[.18em] text-cyan-300">Driver learning practice</p>
+          <h1 class="mt-1 text-2xl font-extrabold sm:text-3xl">Road Rules & Road Signs</h1>
+          <p class="mt-2 max-w-2xl text-sm text-slate-300">Take a 20-question multiple-choice quiz, check your mistakes, learn the signs, and try a fresh set.</p>
+        </div>
+        <div class="rounded-2xl border border-slate-700 bg-slate-900 px-4 py-3 text-center">
+          <div class="text-2xl font-black text-cyan-300">20</div>
+          <div class="text-xs text-slate-300">questions per quiz</div>
+        </div>
+      </div>
+      <nav class="no-print mt-5 flex flex-wrap gap-2" aria-label="Main navigation">
+        <button data-tab="quiz" class="tab-btn rounded-xl bg-cyan-400 px-4 py-2 text-sm font-bold text-slate-950">Quiz</button>
+        <button data-tab="signs" class="tab-btn rounded-xl bg-slate-800 px-4 py-2 text-sm font-bold text-white hover:bg-slate-700">Learn road signs</button>
+        <button data-tab="rules" class="tab-btn rounded-xl bg-slate-800 px-4 py-2 text-sm font-bold text-white hover:bg-slate-700">Road rules</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="mx-auto max-w-5xl px-4 py-6 sm:px-6">
+    <div id="notice" class="mb-5 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900">
+      <strong>Study note:</strong> This is a learning aid, not an official driving-test paper. Road markings and rules can vary by country; use Rwanda's current official Highway Code and instructor guidance for exam preparation.
+    </div>
+
+    <section id="quizSection">
+      <div id="quizIntro" class="mb-5 rounded-2xl bg-white p-5 shadow-sm sm:p-6">
+        <h2 class="text-xl font-bold">Ready to practise?</h2>
+        <p class="mt-2 text-slate-600">Each quiz contains 20 questions selected from a larger question bank. Choose one answer per question, then submit to see your score, correct answers, explanations, and mistakes.</p>
+        <button id="startBtn" class="mt-4 rounded-xl bg-blue-700 px-5 py-3 font-bold text-white hover:bg-blue-800">Start 20-question quiz</button>
+      </div>
+      <div id="quizApp" class="hidden">
+        <div class="mb-4 rounded-2xl bg-white p-4 shadow-sm">
+          <div class="flex items-center justify-between gap-3 text-sm font-semibold">
+            <span id="progressLabel">Question 1 of 20</span>
+            <span id="answeredLabel" class="text-slate-500">0 answered</span>
+          </div>
+          <div class="mt-3 h-2 overflow-hidden rounded-full bg-slate-200">
+            <div id="progressFill" class="progress-fill h-full rounded-full bg-cyan-500" style="width:0%"></div>
+          </div>
+        </div>
+        <form id="quizForm" class="space-y-4"></form>
+        <div class="no-print mt-5 flex flex-wrap gap-3">
+          <button id="submitBtn" class="rounded-xl bg-emerald-700 px-5 py-3 font-bold text-white hover:bg-emerald-800">Submit answers</button>
+          <button id="resetBtn" class="rounded-xl border border-slate-300 bg-white px-5 py-3 font-bold hover:bg-slate-50">Restart this quiz</button>
+        </div>
+        <div id="results" class="mt-6 hidden"></div>
+      </div>
+    </section>
+
+    <section id="signsSection" class="hidden">
+      <div class="mb-5">
+        <h2 class="text-2xl font-extrabold">Road signs: visual guide</h2>
+        <p class="mt-2 text-slate-600">These simple, high-contrast illustrations show common sign shapes and meanings. They are learning illustrations, not official reproductions of every sign used in Rwanda.</p>
+      </div>
+      <div id="signGrid" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"></div>
+    </section>
+
+    <section id="rulesSection" class="hidden">
+      <h2 class="text-2xl font-extrabold">Essential road rules</h2>
+      <p class="mt-2 text-slate-600">Review these basics and confirm local requirements in the current Rwanda Highway Code.</p>
+      <div class="mt-5 grid gap-4 md:grid-cols-2">
+        <article class="rounded-2xl bg-white p-5 shadow-sm"><h3 class="font-bold text-lg">Speed and control</h3><p class="mt-2 text-slate-600">Obey posted speed limits and reduce speed for rain, poor visibility, traffic, pedestrians, roadworks, and sharp bends. A speed limit is a maximum, not a target.</p></article>
+        <article class="rounded-2xl bg-white p-5 shadow-sm"><h3 class="font-bold text-lg">Seat belts and helmets</h3><p class="mt-2 text-slate-600">Wear your seat belt and ensure passengers use required restraints. Motorcycle riders and passengers should wear approved, properly fastened helmets.</p></article>
+        <article class="rounded-2xl bg-white p-5 shadow-sm"><h3 class="font-bold text-lg">Intersections</h3><p class="mt-2 text-slate-600">Approach carefully, obey traffic lights and signs, and give way as required. Never assume another road user has seen you.</p></article>
+        <article class="rounded-2xl bg-white p-5 shadow-sm"><h3 class="font-bold text-lg">Pedestrians</h3><p class="mt-2 text-slate-600">Watch for pedestrians, especially at crossings, schools, bus stops, and built-up areas. Slow down and stop when required to let pedestrians cross safely.</p></article>
+        <article class="rounded-2xl bg-white p-5 shadow-sm"><h3 class="font-bold text-lg">Overtaking</h3><p class="mt-2 text-slate-600">Overtake only when legal and clearly safe. Do not overtake where visibility is restricted or signs/markings prohibit it; return to your lane without cutting in.</p></article>
+        <article class="rounded-2xl bg-white p-5 shadow-sm"><h3 class="font-bold text-lg">Following distance</h3><p class="mt-2 text-slate-600">Leave enough space to stop safely. Increase the gap in rain, on loose surfaces, at night, or when carrying a heavy load.</p></article>
+        <article class="rounded-2xl bg-white p-5 shadow-sm"><h3 class="font-bold text-lg">Phones and alcohol</h3><p class="mt-2 text-slate-600">Do not drive while impaired, tired, or distracted. Put the phone away and pull over safely before handling it.</p></article>
+        <article class="rounded-2xl bg-white p-5 shadow-sm"><h3 class="font-bold text-lg">Breakdown or emergency</h3><p class="mt-2 text-slate-600">Move out of traffic if possible, make yourself visible, and warn approaching traffic when safe. Contact the appropriate emergency or roadside service.</p></article>
+      </div>
+    </section>
+    <footer class="mt-8 border-t border-slate-200 py-5 text-xs leading-5 text-slate-500">Made for self-study. Always follow traffic officers, current local law, official signs, and your driving instructor. This page works offline after it has loaded, except Tailwind CDN styling may require an internet connection.</footer>
+  </main>
+
+<script>
+const bank = [
+{q:"What should you do at a red traffic light?",a:["Continue if the road looks empty","Stop before the stop line and wait for a permitted signal","Honk and proceed slowly","Only stop if pedestrians are present"],c:1,e:"A red light means stop. Wait until the signal permits you to move."},
+{q:"A triangular sign with a red border usually gives what kind of message?",a:["A warning about a hazard ahead","A parking instruction only","A motorway destination","A mandatory speed"],c:0,e:"Triangular red-bordered signs commonly warn drivers about hazards ahead."},
+{q:"What does a STOP sign require?",a:["Slow down only","Stop completely, then proceed when safe and permitted","Stop only when another car is visible","Give a quick horn signal"],c:1,e:"Come to a complete stop at the correct line or position and check before proceeding."},
+{q:"When should you use your indicator?",a:["Only when another vehicle is close","Before turning or changing lanes, early enough to warn others","After you have started turning","Only at night"],c:1,e:"Signal in good time, check mirrors and blind spots, and move only when safe."},
+{q:"What is the safest response when approaching a pedestrian crossing with people waiting or crossing?",a:["Accelerate to pass first","Sound the horn and keep going","Slow down and stop when required to let them cross","Drive around them"],c:2,e:"Approach cautiously and yield/stop as required by local law and the crossing situation."},
+{q:"What should you do if an emergency vehicle approaches with warning lights and siren?",a:["Race it to the junction","Make way safely as soon as practical, following local rules","Stop suddenly in the middle of the road","Follow closely behind it"],c:1,e:"Do not panic or make a dangerous sudden move. Create a safe path for it to pass."},
+{q:"A circular sign with a red border most often indicates:",a:["A prohibition or restriction","A tourist attraction","A hospital in every case","A road name"],c:0,e:"Red-bordered circular signs commonly prohibit or restrict an action, such as a speed limit."},
+{q:"Why should you increase following distance in rain?",a:["The engine gets louder","Braking distance can increase and grip may be reduced","It makes the trip shorter","It lets you use high beams"],c:1,e:"Wet roads can reduce tyre grip and increase stopping distance."},
+{q:"When is overtaking unsafe?",a:["When the road ahead is clear and overtaking is allowed","When you have checked carefully and have enough room","Near a blind bend or crest where you cannot see far enough ahead","When the vehicle ahead signals left and it is safe and legal"],c:2,e:"You need clear visibility and enough space. Never overtake when the road ahead is hidden."},
+{q:"What should you do before changing lanes?",a:["Signal only, then move immediately","Check mirrors, signal, check blind spot, and move if safe","Brake hard without checking","Rely on other drivers to stop"],c:1,e:"Use observation and signalling, and move only when the lane is clear."},
+{q:"A blue circular road sign commonly indicates:",a:["An instruction that must be followed","A warning of every possible hazard","The end of all restrictions","A temporary advertisement"],c:0,e:"Blue circular signs commonly show mandatory instructions, such as a direction to follow."},
+{q:"What should you do when approaching a school or area with children?",a:["Maintain speed because children should watch","Slow down, watch carefully, and be ready to stop","Use the horn continuously","Overtake any stopped vehicle quickly"],c:1,e:"Children may move unpredictably; reduce speed and be prepared to stop."},
+{q:"What does a speed-limit sign tell you?",a:["The speed you must always drive, even in danger","The maximum permitted speed under the posted restriction","The minimum safe distance","The recommended engine gear"],c:1,e:"Do not exceed the posted maximum, and drive slower when conditions require it."},
+{q:"At an intersection, a traffic officer gives instructions that conflict with a traffic light. What should you do?",a:["Ignore the officer and follow the light","Follow the authorised officer's directions","Ask another driver to decide","Proceed only if you honk"],c:1,e:"Follow directions from an authorised traffic officer, consistent with applicable law."},
+{q:"What is the main purpose of a seat belt?",a:["To make the car use less fuel","To reduce injury risk by restraining occupants in a crash","To allow faster driving","To replace an airbag in every situation"],c:1,e:"Seat belts help prevent occupants from being thrown forward or ejected."},
+{q:"What should you do if you feel sleepy while driving?",a:["Open a window and continue no matter what","Drive faster to arrive sooner","Stop somewhere safe and rest before continuing","Drink water while steering with one hand"],c:2,e:"Drowsiness impairs reaction time. Stop safely and rest; do not push through it."},
+{q:"A sign showing a horn crossed out usually means:",a:["Sound the horn twice","No use of the horn in the signed area, except where legally necessary to avoid danger","Only buses may use the horn","Horn required"],c:1,e:"A crossed-out horn indicates a restriction on horn use; obey the sign and local rules."},
+{q:"What is the safest way to approach a sharp bend?",a:["Brake hard halfway through the bend","Reduce speed before entering and keep control through it","Overtake on the bend","Close your eyes briefly to reduce glare"],c:1,e:"Slow before the bend, steer smoothly, and stay in your lane."},
+{q:"What should you do if a tyre suddenly bursts while driving?",a:["Brake hard immediately","Grip the steering wheel, ease off the accelerator, and slow gradually while keeping control","Turn sharply to the roadside","Accelerate to stabilise the vehicle"],c:1,e:"Avoid sudden braking or steering. Maintain control and pull over when safe."},
+{q:"What does a red traffic light with a green arrow generally mean?",a:["Every direction may move freely","You may proceed only in the arrow's direction, while yielding as required","The light is broken so ignore it","Pedestrians must run"],c:1,e:"A green arrow generally permits movement in its indicated direction; still check for people and hazards."},
+{q:"What should you do at an uncontrolled intersection when unsure who has priority?",a:["Speed up to claim priority","Proceed cautiously, reduce speed, observe, and give way as required by local rules","Close your eyes and continue","Use the horn instead of looking"],c:1,e:"Slow down, observe carefully, and apply the right-of-way rules for that junction."},
+{q:"What does a sign showing two roads joining ahead usually warn you about?",a:["A junction or merging traffic ahead","A fuel station","A one-way road ending everywhere","A pedestrian-only zone"],c:0,e:"It warns that roads or traffic lanes join ahead; adjust speed and watch for other traffic."},
+{q:"Why should you check your blind spot before moving sideways?",a:["Mirrors may not show every vehicle or road user beside you","It increases tyre pressure","It tells you the speed limit","It replaces signalling"],c:0,e:"A quick blind-spot check can reveal a road user not visible in mirrors."},
+{q:"What should you do when a vehicle ahead is stopped at a pedestrian crossing?",a:["Overtake it immediately","Assume the driver is parking and pass","Slow down and do not pass until you know it is safe and legal","Honk until it moves"],c:2,e:"The stopped vehicle may be yielding to pedestrians you cannot see."},
+{q:"A broken centre line generally means:",a:["Crossing it may be allowed when safe and legal","You must never cross it in any circumstance","It marks a pedestrian crossing","The road is closed"],c:0,e:"A broken line may be crossed for a manoeuvre only when signs, visibility, and local rules allow it."},
+{q:"What is the safest action when driving at night and an oncoming vehicle approaches?",a:["Keep high beams on to see better","Use dipped headlights to avoid dazzling the other driver","Look directly into its headlights","Drive along the centre line"],c:1,e:"Dip high beams when needed to avoid dazzling oncoming traffic and follow local lighting rules."},
+{q:"What does a sign with a red circle and a white horizontal bar commonly mean?",a:["No entry","Hospital ahead","Parking permitted","Give way to pedestrians only"],c:0,e:"The red circle with a white horizontal bar is the widely used No Entry sign."},
+{q:"Why must you never drive after drinking alcohol or using impairing drugs?",a:["They only affect new drivers","They can impair judgement, coordination, and reaction time","They improve confidence safely","They only matter on highways"],c:1,e:"Impairment increases crash risk. Do not drive if alcohol or drugs may affect you."},
+{q:"What should you do when approaching roadworks?",a:["Ignore temporary signs","Slow down, follow temporary signs and workers' directions, and expect changes","Drive through barriers if no worker is visible","Overtake the queue on the shoulder"],c:1,e:"Temporary signs and traffic control guide you safely through changed road conditions."},
+{q:"What is the purpose of a give-way/yield sign?",a:["You always have priority","You must give priority to traffic on the priority road and stop if necessary","You must park immediately","You must reverse"],c:1,e:"Reduce speed and give way; stop if necessary to avoid interfering with priority traffic."},
+{q:"What should you do if a traffic light is not working?",a:["Assume you have priority","Treat the junction cautiously and follow any officer/signs and local right-of-way rules","Drive through without slowing","Follow the vehicle in front without observing"],c:1,e:"Use extra caution and follow any officer's directions and applicable rules for an uncontrolled junction."}
+];
+
+const signs = [
+{title:"STOP",type:"stop",meaning:"Come to a complete stop, then proceed only when safe and permitted."},
+{title:"Give way / Yield",type:"yield",meaning:"Slow down and give priority to traffic on the priority road; stop if necessary."},
+{title:"No entry",type:"noentry",meaning:"Do not enter the road from this direction."},
+{title:"Speed limit",type:"speed",meaning:"Do not exceed the number shown, and go slower when conditions require."},
+{title:"Warning: bend",type:"bend",meaning:"A bend is ahead. Reduce speed and stay in your lane."},
+{title:"Pedestrian crossing",type:"pedestrian",meaning:"Watch for pedestrians and yield/stop as required."},
+{title:"No overtaking",type:"overtake",meaning:"Do not overtake where the restriction applies."},
+{title:"Mandatory direction",type:"direction",meaning:"Follow the direction shown by the blue circular sign."},
+{title:"Slippery road",type:"slippery",meaning:"Tyre grip may be reduced. Slow down and avoid sudden actions."}
+];
+
+function signSVG(type) {
+ const base = 'role="img" aria-label="Road sign illustration"';
+ if(type==="stop") return `<svg viewBox="0 0 120 120" class="sign" ${base}><polygon points="38,8 82,8 112,38 112,82 82,112 38,112 8,82 8,38" fill="#dc2626" stroke="#fff" stroke-width="5"/><polygon points="40,15 80,15 105,40 105,80 80,105 40,105 15,80 15,40" fill="none" stroke="#fff" stroke-width="2"/><text x="60" y="67" text-anchor="middle" font-size="24" font-weight="900" fill="white">STOP</text></svg>`;
+ if(type==="yield") return `<svg viewBox="0 0 120 120" class="sign" ${base}><polygon points="60,108 8,15 112,15" fill="#dc2626" stroke="#fff" stroke-width="5" stroke-linejoin="round"/><polygon points="60,96 20,24 100,24" fill="#fff"/><polygon points="60,84 33,36 87,36" fill="#fff"/><text x="60" y="68" text-anchor="middle" font-size="13" font-weight="900" fill="#dc2626">GIVE WAY</text></svg>`;
+ if(type==="noentry") return `<svg viewBox="0 0 120 120" class="sign" ${base}><circle cx="60" cy="60" r="49" fill="#dc2626" stroke="#fff" stroke-width="4"/><rect x="19" y="49" width="82" height="22" rx="3" fill="#fff"/></svg>`;
+ if(type==="speed") return `<svg viewBox="0 0 120 120" class="sign" ${base}><circle cx="60" cy="60" r="48" fill="#fff" stroke="#dc2626" stroke-width="9"/><text x="60" y="69" text-anchor="middle" font-size="34" font-weight="900" fill="#111827">50</text><text x="60" y="84" text-anchor="middle" font-size="10" fill="#111827">km/h</text></svg>`;
+ if(type==="bend") return `<svg viewBox="0 0 120 120" class="sign" ${base}><polygon points="60,7 113,105 7,105" fill="#facc15" stroke="#dc2626" stroke-width="7" stroke-linejoin="round"/><path d="M48 88 L48 63 Q48 40 68 40 Q82 40 82 54" fill="none" stroke="#111827" stroke-width="8" stroke-linecap="round"/><path d="M70 48 L82 57 L91 45" fill="none" stroke="#111827" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+ if(type==="pedestrian") return `<svg viewBox="0 0 120 120" class="sign" ${base}><polygon points="60,7 113,105 7,105" fill="#facc15" stroke="#dc2626" stroke-width="7" stroke-linejoin="round"/><circle cx="60" cy="38" r="7" fill="#111827"/><path d="M60 46 L54 66 L42 77 M55 62 L73 68 L83 58 M54 66 L57 88 M57 88 L44 97 M57 88 L70 97" stroke="#111827" stroke-width="6" stroke-linecap="round" fill="none"/><path d="M27 82 H93" stroke="#111827" stroke-width="3"/></svg>`;
+ if(type==="overtake") return `<svg viewBox="0 0 120 120" class="sign" ${base}><circle cx="60" cy="60" r="49" fill="#fff" stroke="#dc2626" stroke-width="8"/><rect x="30" y="31" width="20" height="57" rx="5" fill="#111827"/><rect x="70" y="31" width="20" height="57" rx="5" fill="#64748b"/><path d="M28 30 L92 90" stroke="#dc2626" stroke-width="7"/></svg>`;
+ if(type==="direction") return `<svg viewBox="0 0 120 120" class="sign" ${base}><circle cx="60" cy="60" r="51" fill="#2563eb"/><path d="M60 20 L60 81 M36 58 L60 84 L84 58" stroke="#fff" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>`;
+ return `<svg viewBox="0 0 120 120" class="sign" ${base}><polygon points="60,7 113,105 7,105" fill="#facc15" stroke="#dc2626" stroke-width="7" stroke-linejoin="round"/><path d="M31 78 Q42 62 54 78 T78 78 T96 78" fill="none" stroke="#111827" stroke-width="6"/><path d="M33 53 L44 44 L51 54 L63 42 L74 53 L87 42" fill="none" stroke="#111827" stroke-width="5"/></svg>`;
+}
+
+let current = [], submitted = false;
+const $ = id => document.getElementById(id);
+function shuffled(arr) { const out = [...arr]; for(let i=out.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[out[i],out[j]]=[out[j],out[i]];} return out; }
+function makeQuiz() {
+ current = shuffled(bank).slice(0,20);
+ // Randomise choices but keep the correct answer associated with its text.
+ current = current.map(item => { const opts = item.a.map((text,i)=>({text,correct:i===item.c})); const mix=shuffled(opts); return {...item,a:mix.map(x=>x.text),c:mix.findIndex(x=>x.correct)}; });
+ submitted=false; $('results').classList.add('hidden'); $('results').innerHTML=''; $('quizIntro').classList.add('hidden'); $('quizApp').classList.remove('hidden');
+ renderQuestions(); updateProgress();
+}
+function renderQuestions() {
+ $('quizForm').innerHTML = current.map((item,i)=>`
+ <fieldset class="question-card rounded-2xl bg-white p-5 shadow-sm" data-index="${i}">
+  <legend class="w-full text-base font-bold"><span class="mr-2 inline-flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-sm">${i+1}</span>${item.q}</legend>
+  <div class="mt-4 space-y-2">${item.a.map((ans,j)=>`<label class="option flex cursor-pointer items-start gap-3 rounded-xl border border-slate-200 p-3 hover:bg-slate-50" data-option="${j}"><input class="mt-1 h-4 w-4 accent-blue-700" type="radio" name="q${i}" value="${j}"><span>${String.fromCharCode(65+j)}. ${ans}</span></label>`).join('')}</div>
+  <div class="feedback mt-3 hidden rounded-xl p-3 text-sm"></div>
+ </fieldset>`).join('');
+ $('quizForm').querySelectorAll('input').forEach(input=>input.addEventListener('change',updateProgress));
+ $('progressLabel').textContent='Question 1 of 20';
+}
+function updateProgress(){
+ let count=0;
+ current.forEach((_,i)=>{if($(`quizForm`).querySelector(`input[name="q${i}"]:checked`))count++;});
+ $('answeredLabel').textContent=`${count} answered`;
+ $('progressFill').style.width=`${count/20*100}%`;
+}
+function submitQuiz(){
+ if(submitted) return;
+ let unanswered=0, score=0, mistakes=[];
+ current.forEach((item,i)=>{
+  const card=document.querySelector(`.question-card[data-index="${i}"]`);
+  const selected=card.querySelector(`input[name="q${i}"]:checked`);
+  if(!selected) unanswered++;
+  const chosen=selected?Number(selected.value):-1;
+  const ok=chosen===item.c;
+  if(ok) score++; else mistakes.push({i,item,chosen});
+  card.querySelectorAll('.option').forEach((label,j)=>{
+    label.querySelector('input').disabled=true;
+    if(j===item.c) label.classList.add('correct-answer');
+    if(j===chosen && !ok) label.classList.add('wrong-answer');
+  });
+  const fb=card.querySelector('.feedback'); fb.classList.remove('hidden');
+  fb.className=`feedback mt-3 rounded-xl p-3 text-sm ${ok?'border border-green-200 bg-green-50 text-green-900':'border border-red-200 bg-red-50 text-red-900'}`;
+  fb.innerHTML=`<strong>${ok?'Correct':'Incorrect'}.</strong> Correct answer: ${item.a[item.c]}.<br><span class="mt-1 inline-block">${item.e}</span>`;
+ });
+ submitted=true;
+ const pct=Math.round(score/20*100);
+ $('results').classList.remove('hidden');
+ $('results').innerHTML=`
+ <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+  <p class="text-sm font-bold uppercase tracking-wider text-slate-500">Your result</p>
+  <div class="mt-2 flex flex-wrap items-end gap-3"><span class="text-5xl font-black ${pct>=80?'text-emerald-700':pct>=50?'text-amber-600':'text-red-700'}">${score}/20</span><span class="pb-1 text-lg font-semibold">${pct}% correct</span></div>
+  <div class="mt-4 h-3 overflow-hidden rounded-full bg-slate-200"><div class="h-full rounded-full ${pct>=80?'bg-emerald-500':pct>=50?'bg-amber-500':'bg-red-500'}" style="width:${pct}%"></div></div>
+  <p class="mt-3 text-slate-600">${pct>=80?'Good work. Review any mistakes to strengthen your knowledge.':pct>=50?'Good start. Read the explanations and try another quiz.':'Keep practising. Study the road signs and explanations, then try again.'}</p>
+  <div class="mt-4 grid gap-3 sm:grid-cols-3">
+   <div class="rounded-xl bg-emerald-50 p-3"><div class="text-2xl font-extrabold text-emerald-800">${score}</div><div class="text-sm text-emerald-900">Correct</div></div>
+   <div class="rounded-xl bg-red-50 p-3"><div class="text-2xl font-extrabold text-red-800">${20-score}</div><div class="text-sm text-red-900">Mistakes / unanswered</div></div>
+   <div class="rounded-xl bg-blue-50 p-3"><div class="text-2xl font-extrabold text-blue-800">${unanswered}</div><div class="text-sm text-blue-900">Unanswered</div></div>
+  </div>
+  <h3 class="mt-6 text-lg font-bold">Review your mistakes (${mistakes.length})</h3>
+  ${mistakes.length?`<div class="mt-3 space-y-3">${mistakes.map(({i,item,chosen})=>`<div class="rounded-xl border border-red-100 bg-red-50/60 p-4"><p class="font-semibold">${i+1}. ${item.q}</p><p class="mt-2 text-sm text-red-800">Your answer: ${chosen<0?'No answer':item.a[chosen]}</p><p class="mt-1 text-sm font-semibold text-emerald-800">Correct answer: ${item.a[item.c]}</p><p class="mt-2 text-sm text-slate-700">${item.e}</p></div>`).join('')}</div>`:'<p class="mt-2 rounded-xl bg-emerald-50 p-4 text-emerald-800">Excellent — no mistakes in this quiz!</p>'}
+  <div class="no-print mt-6 flex flex-wrap gap-3"><button id="newQuizBtn" class="rounded-xl bg-blue-700 px-5 py-3 font-bold text-white hover:bg-blue-800">New quiz (20 new questions)</button><button id="retryWrongBtn" class="rounded-xl border border-slate-300 px-5 py-3 font-bold hover:bg-slate-50" ${mistakes.length?'':'disabled'}>Practise mistakes only</button><button onclick="window.print()" class="rounded-xl border border-slate-300 px-5 py-3 font-bold hover:bg-slate-50">Print result</button></div>
+ </div>`;
+ $('newQuizBtn').addEventListener('click',makeQuiz);
+ $('retryWrongBtn').addEventListener('click',()=>{const wrong=mistakes.map(x=>x.item); if(wrong.length){current=wrong.slice(0,20); while(current.length<20)current.push(shuffled(bank.filter(x=>!current.includes(x)))[0]); current=shuffled(current).map(item=>{const opts=item.a.map((text,i)=>({text,correct:i===item.c}));const mix=shuffled(opts);return {...item,a:mix.map(x=>x.text),c:mix.findIndex(x=>x.correct)};});submitted=false;$('results').classList.add('hidden');renderQuestions();updateProgress();window.scrollTo({top:0,behavior:'smooth'});}});
+ $('results').scrollIntoView({behavior:'smooth',block:'start'});
+}
+$('startBtn').addEventListener('click',makeQuiz);
+$('submitBtn').addEventListener('click',()=>{if(!submitted)submitQuiz();});
+$('resetBtn').addEventListener('click',()=>{submitted=false;renderQuestions();updateProgress();window.scrollTo({top:0,behavior:'smooth'});});
+document.querySelectorAll('.tab-btn').forEach(btn=>btn.addEventListener('click',()=>{
+ const tab=btn.dataset.tab;
+ ['quiz','signs','rules'].forEach(name=>$(name+'Section').classList.toggle('hidden',name!==tab));
+ document.querySelectorAll('.tab-btn').forEach(b=>{b.className=`tab-btn rounded-xl px-4 py-2 text-sm font-bold ${b.dataset.tab===tab?'bg-cyan-400 text-slate-950':'bg-slate-800 text-white hover:bg-slate-700'}`;});
+ window.scrollTo({top:0,behavior:'smooth'});
+}));
+$('signGrid').innerHTML=signs.map(s=>`<article class="flex gap-4 rounded-2xl bg-white p-4 shadow-sm"><div class="flex items-center justify-center rounded-xl bg-slate-50 p-1">${signSVG(s.type)}</div><div><h3 class="font-bold">${s.title}</h3><p class="mt-1 text-sm leading-6 text-slate-600">${s.meaning}</p></div></article>`).join('');
+</script>
+</body>
+</html>
